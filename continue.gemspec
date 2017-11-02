@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.email         = ["105003+carld@users.noreply.github.com"]
 
   spec.summary       = %q{A simple command chain}
-  spec.description   = %q{Invokes a list of lambdas, halting execution on error}
-  spec.homepage      = ""
+  spec.description   = %q{Run a series of commands, preventing execution of remaining commands on a error}
+  spec.homepage      = "https://github.com/carld/continue"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
