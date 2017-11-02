@@ -1,3 +1,5 @@
+https://travis-ci.org/carld/continue.svg?branch=master
+
 # Continue
 
 This gem was created to help with situations where a chain or pipeline of
