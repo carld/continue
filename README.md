@@ -1,4 +1,4 @@
-[Build Status](https://travis-ci.org/carld/continue.svg?branch=master)
+[![Build Status](https://travis-ci.org/carld/continue.svg?branch=master)](https://travis-ci.org/carld/continue)
 
 # Continue
 
