@@ -15,7 +15,7 @@ module Continue
   end
 
   def self.Command(&block)
-    ->(s,e,v) { block.call(e,v); s.call }
+    ->(s,e,v) { block.call(v) ? s.call : e.call  }
   end
 
 end

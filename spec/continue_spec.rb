@@ -68,9 +68,9 @@ RSpec.describe Continue do
       expect(o).to receive(:test).exactly(3).times
 
       Continue::Run [
-        Continue::Command() { |_e| o.test },
-        Continue::Command() { |_e| o.test },
-        Continue::Command() { |_e| o.test }
+        Continue::Command() { |_e| o.test; true },
+        Continue::Command() { |_e| o.test; true },
+        Continue::Command() { |_e| o.test; true }
       ]
     end
 
@@ -79,9 +79,9 @@ RSpec.describe Continue do
       expect(o).to receive(:test).exactly(2).times
 
       Continue::Run [
-        Continue::Command() { |_e| o.test },
-        Continue::Command() { |e| e.call },
-        Continue::Command() { |_e| o.test }
+        Continue::Command() { |_e| o.test; true },
+        Continue::Command() { |e| o.test; false },
+        Continue::Command() { |_e| o.test; true }
       ]
     end
   end

@@ -1,15 +1,14 @@
 # Continue
 
 This gem was created to help with situations where a chain or pipeline of
-commands are run. Where a command encounters an error, it can call an error proc
-and the remaining commands are not run.
+commands are run. Where a command encounters an error it can prevent remaining commands from being run.
 
 For example,
 
 ```ruby
   Continue::Run [
-    Continue::Command() {|err| err.call unless do_something_ok },
-    Continue::Command() {|err| do_something_else }
+    Continue::Command() {|val| do_something_ok ? true : false },
+    Continue::Command() {|val| do_something_else; true }
   ]
 ```
 
