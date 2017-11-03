@@ -17,8 +17,8 @@ RSpec.describe Continue do
 
     it "calls successive lambdas after a call to success" do
 
-      a = ->(s, _e, _v) { s.call }
-      b = ->(s, _e, _v) { s.call }
+      a = ->(s, _e, _v, _a) { s.call }
+      b = ->(s, _e, _v, _a) { s.call }
 
       expect(a).to receive(:call).and_call_original
       expect(b).to receive(:call)
@@ -28,7 +28,7 @@ RSpec.describe Continue do
 
     it "does not call successive lambdas after a call to error" do
 
-      a = ->(_s, e, _v) { e.call }
+      a = ->(_s, e, _v, _a) { e.call }
       b = ->() { }
 
       expect(a).to receive(:call).and_call_original
@@ -45,22 +45,31 @@ RSpec.describe Continue do
       expect(o).to receive(:do_the_third_thing) { true }
 
       Continue::Run [
-        ->(s, e, _v) { o.do_the_first_thing ? s.call : e.call },
-        ->(s, e, _v) { o.do_the_second_thing ? s.call : e.call },
-        ->(s, e, _v) { o.do_the_third_thing ? s.call : e.call }
+        ->(s, e, _v, _a) { o.do_the_first_thing ? s.call : e.call },
+        ->(s, e, _v, _a) { o.do_the_second_thing ? s.call : e.call },
+        ->(s, e, _v, _a) { o.do_the_third_thing ? s.call : e.call }
       ]
     end
 
     it "calls a custom error proc" do
 
       err = ->() { "custom error" }
-      a = ->(_s, e, _v) { e.call }
+      a = ->(_s, e, _v, _a) { e.call }
 
       expect(err).to receive(:call)
 
       Continue::Run [
         a
       ], :unused_state, err
+    end
+
+    it "passes the result of the previous command to the next command" do
+      Continue::Run [
+        ->(s, e, _v, _a) { s.call(1) },
+        ->(s, e, _v, _a) { expect(_a).to eq 1; s.call(:something) },
+        ->(s, e, _v, _a) { expect(_a).to eq :something; s.call(true) },
+        ->(s, e, _v, _a) { expect(_a).to eq true; s.call(1) }
+      ]
     end
 
     it "calls procs returned by command" do
@@ -96,7 +105,7 @@ RSpec.describe Continue do
 
       expect(o).to receive(:test)
 
-      command.call(->(){},->(){},nil)
+      command.call(->(){},->(){},nil,nil)
     end
   end
 end

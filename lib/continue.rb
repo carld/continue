@@ -4,18 +4,18 @@ module Continue
 
   def self.Run(procs, value=nil, error=nil)
 
-    run = ->(p,v,e) do
-      f, *r = p
-      s = -> () { run.call(r,v,e) }
-      e ||= ->() { false }
-      f.call(s,e,v) if f
+    run = ->(rem_procs,val,err,_args=nil) do
+      fn, *rest = rem_procs
+      s = ->(args=nil) { run.call(rest,val,err,args) }
+      err ||= ->() { false }
+      fn.call(s,err,val,_args) if fn
     end
 
     run.call(procs, value, error)
   end
 
   def self.Command(&block)
-    ->(s,e,v) { block.call(v) ? s.call : e.call  }
+    ->(s,e,v,a) { block.call(v, a) ? s.call : e.call  }
   end
 
 end
